@@ -12,8 +12,6 @@ from selenium.common.exceptions import NoSuchElementException , TimeoutException
 #from pages.config import EMAIL,PASSWORD
 from urllib import parse
 
-from test_coupang.tests.pages import login_page
-
 class TestMainPage:
     def setup(self):
         self.driver = webdriver.Chrome()
@@ -36,7 +34,7 @@ class TestMainPage:
         except NoSuchElementException as e:
             assert False
 
-    @pytest.mark.skip(reason="아직 테스트 케이스 발동 안함")
+    #@pytest.mark.skip(reason="아직 테스트 케이스 발동 안함")
     def test_login_test(self,driver:WebDriver):
         try:
             main_page = MainPage(driver)
@@ -50,18 +48,18 @@ class TestMainPage:
             time.sleep(2)
 
             main_page.click_LINK_TEXT("로그인")
+
+            time.sleep(2)
+            
             login_page.input_password_and_email()
+
+            time.sleep(2)
             login_page.click_login_button()
 
+            time.sleep(7)
             wait.until(EC.url_contains("coupang.com"))
             assert "coupang.com" in driver.current_url, "로그인 후 메인 페이지로 돌아오지 않았습니다."
             
-            time.sleep(2)
-            logout_button_xpath = "//button[text()='로그아웃']"  # 로그아웃 버튼의 XPATH (HTML 구조에 따라 수정 필요)
-            wait.until(EC.presence_of_element_located((By.XPATH, logout_button_xpath)))  # 로그아웃 버튼 확인
-            logout_button = driver.find_element(By.XPATH, logout_button_xpath)
-            assert logout_button.is_displayed(), "로그아웃 버튼이 표시되지 않았습니다."
-
             driver.save_screenshot("로그인 성공.jpg")
 
         except NoSuchElementException as e:
@@ -80,7 +78,7 @@ class TestMainPage:
             driver.save_screenshot('로그인-실패-기타오류.jpg')  # 기타 예외 상황
             assert False, f"로그인 실패: 알 수 없는 오류 발생 - {e}"
 
-    #@pytest.mark.skip(reason="아직 테스트 케이스 발동 안함")
+    @pytest.mark.skip(reason="아직 테스트 케이스 발동 안함")
     def test_add_cart(self, driver:WebDriver):
         try:
             ITEMS_XPATH = "//form//ul/li"

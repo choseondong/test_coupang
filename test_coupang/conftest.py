@@ -33,6 +33,10 @@ def driver():
     driver = webdriver.Chrome(service=Service(), options=chrome_options)
     driver.execute_cdp_cmd("Network.setExtraHTTPHeaders", {"headers": {"Referer": "https://www.coupang.com/"}})
 
+    # 3) 로그인 데이터 요청
+    driver.execute_cdp_cmd("Network.clearBrowserCache", {})
+    driver.delete_all_cookies()
+    
     #  대기시간 설정
     driver.implicitly_wait(5)
 
