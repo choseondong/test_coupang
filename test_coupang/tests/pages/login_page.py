@@ -2,6 +2,7 @@
 from xml.dom.minidom import Element
 from conftest import driver
 from selenium.webdriver.common.by import By  # By 모듈 추가
+#from config import EMAIL, PASSWORD
 
 class LoginPage: 
   
@@ -19,5 +20,7 @@ class LoginPage:
 
   def input_password_and_email(self):
     input_email = self.driver.find_element(By.ID,"email").send_keys("cho951014@naver.com")
-    input_password = self.driver.find_element(By.ID,"password").send_keys("123")
-  def click_login_button():
+    input_password = self.driver.find_element(By.ID,"password").send_keys("005rkqkd")
+
+  def click_login_button(self):
+    login = self.driver.find_element(By.XPATH, "//button[text()='로그인']")
