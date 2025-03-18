@@ -13,7 +13,6 @@ from pages.login_page import LoginPage
 from selenium.common.exceptions import NoSuchElementException , TimeoutException
 #from pages.config import EMAIL,PASSWORD
 from urllib import parse
-from tests.pages import main_page
 
 class TestMainPage:
     def setup(self):
@@ -84,7 +83,7 @@ class TestMainPage:
 
 
     #노트북 검색 필터 (삼성전자 브랜드 선택과 가격 필터 결정)
-    @pytest.mark.skip(reason="테스트")
+    #@pytest.mark.skip(reason="테스트")
     def test_filter_search(self, driver:WebDriver):
         try:
             ITEMS_XPATH = "//img"  # 검색된 노트북 이미지
@@ -102,8 +101,9 @@ class TestMainPage:
 
             time.sleep(2)
             
-            brand = ws(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//label[text()='삼성전자']")))
+            brand = ws(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//*[@id='searchBrandFilter']/ul/li[1]/label")))
             driver.execute_script("arguments[0].scrollIntoView();", brand)
+
 
             time.sleep(2)
             actions = ActionChains(driver)
@@ -120,8 +120,9 @@ class TestMainPage:
 
             time.sleep(2)
             
-            search_button = ws(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//a[text()='검색']")))
+            search_button = ws(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//*[@id='searchPriceFilter']/div/a")))
             search_button.click()
+
 
         except TimeoutException as e:
         # Timeout 발생 시 처리
