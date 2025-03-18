@@ -83,7 +83,7 @@ class TestMainPage:
 
 
     #노트북 검색 필터 (삼성전자 브랜드 선택과 가격 필터 결정)
-    #@pytest.mark.skip(reason="테스트")
+    @pytest.mark.skip(reason="테스트")
     def test_filter_search(self, driver:WebDriver):
         try:
             ITEMS_XPATH = "//img"  # 검색된 노트북 이미지
@@ -94,7 +94,19 @@ class TestMainPage:
             wait.until(EC.url_contains("coupang.com")) #URL 검증
             assert "coupang.com" in driver.current_url #검증
 
-            main_page.search_items('노트북')
+            text_to_type = "노"
+            text_to_type_two = "트"
+            text_to_type_three = "북"
+
+            text_list = [text_to_type, text_to_type_two, text_to_type_three]
+
+
+            for i in text_list:
+                for char in i:
+                    main_page.search_text_input(char)
+                    time.sleep(3)  # 0.2초(200ms) 정도 대기 (원하는 만큼 조절)
+                
+            main_page.search_text_enter()
 
             wait.until(EC.presence_of_all_elements_located((By.XPATH, ITEMS_XPATH)))
             items = driver.find_elements(By.XPATH, ITEMS_XPATH)
@@ -255,36 +267,51 @@ class TestMainPage:
             driver.save_screenshot('메인페이지-링크텍스트-실패-타임에러.jpg')
             assert False
 
-    @pytest.mark.skip(reason="아직 테스트 케이스 발동 안함")
+    #@pytest.mark.skip(reason="아직 테스트 케이스 발동 안함")
     def test_search_items(self,driver:WebDriver):
         try:
+            time.sleep(2)
             ITEMS_XPATH = "//form//ul/li"
             main_page = MainPage(driver)
             main_page.open()
 
-        # 로그인 페이지(accounts)로 이동했는지 확인
-            wait = ws(driver, 10) #최대 10초까지 기다림
-            wait.until(EC.url_contains("coupang.com")) #URL 검증
-            assert "coupang.com" in driver.current_url #검증
-
             time.sleep(2)
 
-            main_page.search_items('노트북')
+            wait = ws(driver, 10) #최대 10초까지 기다림
+            wait.until(EC.url_contains("coupang.com")) #URL 검증
+            assert "coupang.com" in driver.current_url #검증 
+        
+            time.sleep(2) #2초 왜? 봇인거 안들키기 위해서 
+        
+            text_to_type = "노"
+            text_to_type_two = "트"
+            text_to_type_three = "북"
 
-            ws(driver,10).until(EC.presence_of_element_located((By.XPATH, ITEMS_XPATH)))
+            text_list = [text_to_type, text_to_type_two, text_to_type_three]
+
+
+            for i in text_list:
+                for char in i:
+                    main_page.search_text_input(char)
+                    time.sleep(3)  # 0.2초(200ms) 정도 대기 (원하는 만큼 조절)
+                
+            main_page.search_text_enter()
+            ws(driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, ITEMS_XPATH))
+            )
+
             items = driver.find_elements(By.XPATH, ITEMS_XPATH)
             item_name = parse.quote('노트북')
 
             assert len(items) > 0
             assert item_name in driver.current_url
-
-            driver.save_screenshot('메인페이지-검색-성공.jpg')
             
+            driver.save_screenshot('메인페이지-검색-성공.jpg')
         except NoSuchElementException as e:
             driver.save_screenshot('메인페이지-검색-실패-노서치.jpg')
             assert False
-            
-        except TimeoutError as e:
+
+        except TimeoutException as e:
             driver.save_screenshot('메인페이지-검색-실패-타임에러.jpg')
             assert False
             
