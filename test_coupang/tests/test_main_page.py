@@ -34,7 +34,7 @@ class TestMainPage:
         except NoSuchElementException as e:
             assert False
 
-    #@pytest.mark.skip(reason="아직 테스트 케이스 발동 안함")
+    @pytest.mark.skip(reason="아직 테스트 케이스 발동 안함")
     def test_login_test(self,driver:WebDriver):
         try:
             main_page = MainPage(driver)
@@ -81,7 +81,7 @@ class TestMainPage:
     @pytest.mark.skip(reason="아직 테스트 케이스 발동 안함")
     def test_add_cart(self, driver:WebDriver):
         try:
-            ITEMS_XPATH = "//form//ul/li"
+            ITEMS_XPATH = "//img"  # 검색된 노트북 이미지
             CART_BUTTON_XPATH = "//button[contains(text(), '장바구니 담기')]"
             main_page = MainPage(driver)
             main_page.open()
@@ -94,7 +94,7 @@ class TestMainPage:
 
             main_page.search_items('노트북')
 
-            ws(driver,10).until(EC.presence_of_element_located((By.XPATH, ITEMS_XPATH)))
+            wait.until(EC.presence_of_all_elements_located((By.XPATH, ITEMS_XPATH)))
             items = driver.find_elements(By.XPATH, ITEMS_XPATH)
             
             time.sleep(2)
@@ -103,7 +103,7 @@ class TestMainPage:
                 # 첫 번째 아이템 클릭 전 확인
                 first_item = items[0]
                 driver.execute_script("arguments[0].scrollIntoView();", first_item)  # 요소를 화면에 스크롤
-                time.sleep(1)  # 요소 로드 대기
+                time.sleep(2)  # 요소 로드 대기
                 first_item.click()  # 클릭
             else:
                 assert False, "검색 결과가 비어 있습니다."
